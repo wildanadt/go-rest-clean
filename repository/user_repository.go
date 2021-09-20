@@ -50,7 +50,7 @@ func (u *userRepo) Add(user *models.User) error {
 func (u *userRepo) GetUserByUsername(username string) error {
 	user := models.User{}
 	user.Username = username
-	result := u.db.Find(&user)
+	result := u.db.Where("username = ?", username).First(&user)
 	// fmt.Println(result.RowsAffected)
 	if result.RowsAffected > 0 {
 		err := errors.New("user exist")

@@ -7,6 +7,6 @@ type UserUsecase interface {
 	CheckUser(input *models.LoginInput) error
 }
 
-type AuthUsecaase interface {
+type AuthUsecase interface {
 	LoginCheck(username string, password string) (string, error)
 }

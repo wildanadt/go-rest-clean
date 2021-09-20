@@ -10,14 +10,17 @@ import (
 
 type AuthHandler struct {
 	UserUsecases usecases.UserUsecase
+	AuthUsecases usecases.AuthUsecase
 }
 
-func NewAuthhandler(r *gin.RouterGroup, uus usecases.UserUsecase) {
+func NewAuthandler(r *gin.RouterGroup, uus usecases.UserUsecase, aus usecases.AuthUsecase) {
 	handler := &AuthHandler{
 		UserUsecases: uus,
+		AuthUsecases: aus,
 	}
 
 	r.POST("/register", handler.Register)
+	r.POST("/login", handler.Login)
 }
 
 func (ah *AuthHandler) Register(c *gin.Context) {
@@ -48,8 +51,11 @@ func (ah *AuthHandler) Login(c *gin.Context) {
 		return
 	}
 
-	if err := ah.UserUsecases.CheckUser(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+	token, err := ah.AuthUsecases.LoginCheck(input.Username, input.Password)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "username or password incorrect."})
 		return
 	}
+
+	c.JSON(http.StatusOK, gin.H{"token": token})
 }

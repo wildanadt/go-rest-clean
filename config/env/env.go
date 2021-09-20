@@ -31,6 +31,10 @@ func LoadEnv() (err error) {
 	if err != nil {
 		return err
 	}
+	err = env.Parse(&Config.JWTConfig)
+	if err != nil {
+		return err
+	}
 
 	return err
 

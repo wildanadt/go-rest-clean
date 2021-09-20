@@ -1,10 +1,9 @@
 package controllers
 
 import (
-	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/wildanadt/go-rest-clean/models"
 	usecases "github.com/wildanadt/go-rest-clean/usecase"
 )
 
@@ -17,21 +16,10 @@ func NewUserHandler(r *gin.RouterGroup, uus usecases.UserUsecase) {
 		UserUsecase: uus,
 	}
 
-	r.POST("/register", handler.AddUser)
+	r.GET("/test", handler.GetUser)
 	// r.POST("/register")
 }
 
-func (uh *UserHandler) AddUser(c *gin.Context) {
-	var user models.RegisterInput
-
-	err := c.ShouldBindJSON(&user)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-
-	err = uh.UserUsecase.AddUser(&user)
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+func (uh *UserHandler) GetUser(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{"success": "api"})
 }
